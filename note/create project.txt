@@ -4,5 +4,5 @@
 4.remove ; in front "extension=fileinfo" in php.ini
 5.remove ; in front 'extension_dir = "ext"' in php.ini
 6.cd project directory
-7.composer create-project laravel/laravel –-prefer-dist //other version
+7.composer create-project laravel/laravel name –-prefer-dist //other version
   composer create-project laravel/laravel test dev-develop //version 5.7

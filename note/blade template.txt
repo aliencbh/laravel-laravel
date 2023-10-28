@@ -1,0 +1,134 @@
+@yield('title')
+@extends('layouts.app')
+@section('title', 'Page Title')
+@parent
+@section('content')	@endsection
+@include('includes.head')
+@{{ name }}
+
+@forelse ($products as $product)  
+        <p class="bg-danger text-white p-1">product</p>  
+    @empty  
+        <p class="bg-danger text-white p-1">no product</p>  
+    @endforelse  
+
+@if (count($records) === 1)
+    I have one record!
+@elseif (count($records) > 1)
+    I have multiple records!
+@else
+    I don't have any records!
+@endif
+
+@verbatim
+    <div class="container">
+        Hello, {{ name }}.
+    </div>
+@endverbatim
+
+@unless (Auth::check())
+    You are not signed in.
+@endunless
+
+@isset($records)
+    // $records is defined and is not null...
+@endisset 
+
+@empty($records)
+    // $records is "empty"...
+@endempty
+
+@auth
+    // The user is authenticated...
+@endauth
+
+@guest
+    // The user is not authenticated...
+@endguest
+
+@auth('admin')
+    // The user is authenticated...
+@endauth
+ 
+@guest('admin')
+    // The user is not authenticated...
+@endguest
+
+@production
+    // Production specific content...
+@endproduction
+
+@env('staging')
+    // The application is running in "staging"...
+@endenv
+ 
+@env(['staging', 'production'])
+    // The application is running in "staging" or "production"...
+@endenv
+
+@hasSection('navigation')
+    <div class="pull-right">
+        @yield('navigation')
+    </div>
+ 
+    <div class="clearfix"></div>
+@endif
+
+@sectionMissing('navigation')
+    <div class="pull-right">
+        @include('default-navigation')
+    </div>
+@endif
+
+@switch($i)
+    @case(1)
+        First case...
+        @break
+ 
+    @case(2)
+        Second case...
+        @break
+ 
+    @default
+        Default case...
+@endswitch
+
+@for ($i = 0; $i < 10; $i++)
+    The current value is {{ $i }}
+@endfor
+ 
+@foreach ($users as $user)
+    <p>This is user {{ $user->id }}</p>
+@endforeach
+ 
+@forelse ($users as $user)
+    <li>{{ $user->name }}</li>
+@empty
+    <p>No users</p>
+@endforelse
+ 
+@while (true)
+    <p>I'm looping forever.</p>
+@endwhile
+
+@foreach ($users as $user)
+    @if ($user->type == 1)
+        @continue
+    @endif
+ 
+    <li>{{ $user->name }}</li>
+ 
+    @if ($user->number == 5)
+        @break
+    @endif
+@endforeach
+
+@foreach ($users as $user)
+    @continue($user->type == 1)
+ 
+    <li>{{ $user->name }}</li>
+ 
+    @break($user->number == 5)
+@endforeach
+
+https://laravel.com/docs/10.x/blade

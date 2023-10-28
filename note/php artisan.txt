@@ -1,0 +1,9 @@
+php artisan optimize --force
+php artisan config:cache
+php artisan route:cache
+
+
+php artisan make:controller -resource PostController
+
+bypass maintenance mode
+php artisan down --secret="1630542a-246b-4b66-afa1-dd72a4c43515"

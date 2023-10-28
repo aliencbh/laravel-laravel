@@ -1,0 +1,47 @@
+install docker
+install os
+install os dependency
+install php
+install laravel
+install postgres
+install composer
+install yum
+install ssl
+yum update
+create db
+migrate db
+edit app file
+edit config file
+mb string 计算小数点
+edit php.ini
+edit yaml
+set env file
+set auto backup
+set load balancing
+
+
+create database
+create html website
+create migration file
+create model
+create controller
+create crud
+edit css
+csrf
+create login page
+create role
+assign role
+create testing page
+sort function a-z
+confirm function have comment
+run testing page
+create phpdocument
+db optimization
+remove comment
+minimize css js
+seo optimazation
+set cronjob
+submit to github
+push to docker
+auto install server
+auto start server

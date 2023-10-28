@@ -1,0 +1,14 @@
+CORS
+cross-origin
+Header always set Access-Control-Allow-Origin "https://example.com"
+
+csrf
+
+
+.htaccess
+
+
+ssl
+
+
+https

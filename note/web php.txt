@@ -1,0 +1,5 @@
+Partial resource routes
+Route::resource('student','StudentController',['only' => ['create','show']]);  
+
+
+check env is dev before drop database
