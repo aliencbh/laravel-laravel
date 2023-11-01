@@ -33,15 +33,18 @@ create role
 assign role
 create testing page
 sort function a-z
+check db have rollback
+set cronjob
+
 confirm function have comment
-run testing page
 create phpdocument
-db optimization
 remove comment
 minimize css js
+db optimization
 seo optimazation
-set cronjob
-submit to github
+
+run testing page
 push to docker
+submit to github
 auto install server
 auto start server

@@ -7,3 +7,14 @@ php artisan make:controller -resource PostController
 
 bypass maintenance mode
 php artisan down --secret="1630542a-246b-4b66-afa1-dd72a4c43515"
+
+
+Generate basic scaffolding...
+php artisan ui bootstrap
+php artisan ui vue
+php artisan ui react
+
+Generate login / registration scaffolding...
+php artisan ui bootstrap --auth
+php artisan ui vue --auth
+php artisan ui react --auth
