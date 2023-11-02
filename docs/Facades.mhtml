@@ -17,19 +17,7 @@ Content-Location: https://laravel.com/docs/10.x/facades#facade-class-reference
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="cid:css-f8777eb8-78f9-4e35-bf92-963023548d09@mhtml.blink">
-    <title>Facades - Laravel 10.x - The PHP Framework For Web Artisans</title>
-    <link rel="canonical" href="https://laravel.com/docs/10.x/facades">
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="Laravel - The PHP Framework For Web Artisans">
-    <!-- Open Graph / Facebook -->
-    <meta property="og:url" content="https://laravel.com/">
-    <meta property="og:title" content="Laravel - The PHP Framework For Web Artisans">
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://laravel.com/">
-    <meta property="twitter:title" content="Laravel - The PHP Framework For Web Artisans">
+    <title>Facedes</title>
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="https://laravel.com/img/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://laravel.com/img/favicon/favicon-32x32.png">
