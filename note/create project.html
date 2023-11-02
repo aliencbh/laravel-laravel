@@ -1,44 +1,47 @@
 <!doctype html>
 <html>
-    <head>
-        <title>create project</title>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta name="keywords" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>
-            <ol id="ol">
-                <li>install composer</li>
-                <li>install editor</li>
-                <li>install git</li>
-                <li>install node</li>
-                <li>install php</li>
-                <li>install xampp</li>
-                <li>set global var php path</li>
-                <li>setup github</li>
-                <li>edit hosts file</li>
-                <li>remove ; in front "extension=curl" in php.ini</li>
-                <li>remove ; in front "extension=fileinfo" in php.ini</li>
-                <li>remove ; in front "extension=openssl" in php.ini</li>
-                <li>remove ; in front "extension=zip" in php.ini</li>
-                <li>remove ; in front 'extension_dir = "ext"' in php.ini</li>
-                <li>cd project directory</li>
-                <li>composer create-project laravel/laravel name --prefer-dist //other version<br />
-                    composer create-project laravel/laravel test dev-develop //version 5.7</li>
-                <li>cd name</li>
-                <li>edit .env DB_DATABASE=laravel</li>
-                <li>edit config/database.php database</li>
-                <li>php artisan key:generate</li> <!-- perform the permission writing for your storage directory and the bootstrap/cache. -->
-                <li>php artisan config:cache</li>
-                <li>php artisan migrate</li>
-                <li>php artisan serve</li>
-                <li>composer init</li>
-                <li>composer update</li>
-                <li>npm install</li>
-                <li>npm run dev</li>
-                <li>npm run build</li>
-            </ol>
-        </div>
-    </body>
+<head>
+    <title>create project</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+</head>
+<body>
+<div>
+    <ol id="ol">
+        <li>install composer</li>
+        <li>install editor</li>
+        <li>install git</li>
+        <li>install node</li>
+        <li>install php</li>
+        <li>install xampp</li>
+        <li>set global var php path</li>
+        <li>setup github</li>
+        <li>edit hosts file</li>
+        <li>remove ; in front "extension=curl" in php.ini</li>
+        <li>remove ; in front "extension=fileinfo" in php.ini</li>
+        <li>remove ; in front "extension=openssl" in php.ini</li>
+        <li>remove ; in front "extension=zip" in php.ini</li>
+        <li>remove ; in front 'extension_dir = "ext"' in php.ini</li>
+        <li>cd project directory</li>
+        <li>composer create-project laravel/laravel name --prefer-dist //other version<br/>
+            composer create-project laravel/laravel test dev-develop //version 5.7
+        </li>
+        <li>cd name</li>
+        <li>edit .env DB_DATABASE=laravel</li>
+        <li>edit config/database.php database</li>
+        <li>composer init -n</li>
+        <li>composer update</li>
+        <li>composer require laravel/breeze --dev</li>
+        <li>php artisan breeze:install</li>
+        <li>php artisan migrate</li>
+        <li>php artisan key:generate</li>   <!-- perform the permission writing for your storage directory and the bootstrap/cache. -->
+        <li>php artisan config:cache</li>
+        <li>npm init</li>
+        <li>npm install</li>
+        <li>npm run build</li>
+        <li>npm run dev</li>
+    </ol>
+</div>
+</body>
 </html>
