@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>crypt cookie</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <h2>encrypt</h2>
+    <h3>using facade</h3>
+    <h4>Example 1 encrypt cookie</h4>
+    <pre>&lt;?php
+use Illuminate\Support\Facades\Cookie;
+
+Cookie::queue(Cookie::encrypt('name', 'value', $minutes));
+
+ ?>
+    </pre>
+    <h4>Example 2 encrypt cookie with path and domain</h4>
+    <pre>&lt;?php
+use Illuminate\Support\Facades\Cookie;
+
+Cookie::queue(Cookie::encrypt('name', 'value', $minutes, '/path', 'example.com'));
+
+ ?>
+    </pre>
+    <h2>decrypt</h2>
+    <h3>using facade</h3>
+    <pre>&lt;?php
+use Illuminate\Support\Facades\Cookie;
+
+$value = Cookie::decrypt('name');
+
+ ?>
+    </pre>
+  </body>
+</html>

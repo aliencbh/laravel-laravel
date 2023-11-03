@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <title>retrieve cookie</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <h3>using request helper</h3>
+    <pre>&lt;?php
+$value = request()->cookie('name');
+
+ ?>
+    </pre>
+    <h3>using facade</h3>
+    <pre>&lt;?php
+use Illuminate\Support\Facades\Cookie;
+
+$value = Cookie::get('name');
+
+ ?>
+    </pre>
+  </body>
+</html>

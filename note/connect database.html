@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>connect database</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <ol id="ol">
+      <li>ensure you have a database set up and have the credentials (username, password, hostname, etc.) ready</li>
+      <li>open the config/database.php file and find the connections array</li>
+      <li>change database name in ['default' => env('DB_CONNECTION', 'mysql'),]</li>
+      <li>open the .env file</li>
+      <li>
+        edit these variable<br />
+        DB_CONNECTION=mysql<br />
+        DB_HOST=127.0.0.1<br />
+        DB_PORT=3306<br />
+        DB_DATABASE=laravel<br />
+        DB_USERNAME=root<br />
+        DB_PASSWORD=
+      </li>
+      <li>save the .env file and exit</li>
+      <li>$users = DB::table('users')->get();</li>
+    </ol>
+  </body>
+</html>

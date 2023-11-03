@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <title>set cookie</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <h3>using facade</h3>
+    <h4>example 1 Create a new cookie and queue it for sending</h4>
+    <pre>&lt;?php
+use Illuminate\Support\Facades\Cookie;
+
+// Create a new cookie and queue it for sending
+Cookie::queue(Cookie::make('name', 'value', $minutes));
+
+ ?>
+    </pre>
+    <h4>example 2 Create a new cookie and queue it for sending with extra parameters</h4>
+    <pre>&lt;?php
+// Create a new cookie and queue it for sending with extra parameters
+Cookie::queue(Cookie::make('name', 'value', $minutes, '/', null, true, false));
+
+ ?>
+    </pre>
+    <h3>using response helper</h3>
+    <pre>&lt;?php
+use Illuminate\Http\Response;
+
+$response = new Response('Hello World');
+$response->withCookie(cookie('name', 'value', $minutes));
+
+return $response;
+
+ ?>
+    </pre>
+    <h3>using cookie helper</h3>
+    <pre>&lt;?php
+return response('Hello World')->cookie(cookie('name', 'value', $minutes));
+
+ ?>
+    </pre>
+    <h3>using cookie middleware</h3>
+    <pre>&lt;?php
+use Illuminate\Http\Response;
+
+public function handle($request, Closure $next)
+{
+    $response = $next($request);
+    return $response->withCookie(cookie('name', 'value', $minutes));
+}
+
+ ?>
+    </pre>
+  </body>
+</html>

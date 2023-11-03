@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      .card:not(.default) {
+        border: var(--bs-border-width)solid #bce8f1;
+        background-color: #fff;
+        margin-bottom: 2rem;
+        box-shadow: 0 0 0 1px #bdd5ff,0 0 0 4px rgb(53 170 220/8%);
+        padding: 3px;
+        border-radius: var(--bs-border-radius);
+      }
+
+      .card:not(.default)>.card-header {
+        border: none;
+        background-color: #e5f3ff;
+        border-radius: var(--bs-border-radius);
+        padding: .5rem 1rem;
+      }
+
+      .card:not(.default) :last-child {
+        margin-bottom: 0;
+      }
+
+      ol:not(.default)>li::marker, ul:not(.default)>li::marker {
+        color: #fc4c4e;
+      }
+    </style>
+    <title>middleware</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <h2>Define Middleware</h2>
+    <p>file location : app/Http/Middleware</p>
+    <pre>php artisan make:middleware CheckUser</pre>
+    <h2>Register Middleware</h2>
+    <p>Before using any middleware, you have to register it.</p>
+    <div class="card">
+      <div class="card-header">Laravel provides two types of middleware. These are:</div>
+      <div class="card-body">
+        <ul>
+          <li>Global Middleware<br />Global middlewares are those that will be running during every HTTP request of your application. In the $middleware property of your app/Http/Kernel.php class, you can list all the global middleware for your project.</li>
+          <li>Route Middleware<br />When you want middleware for specific routes, you must add the middleware with a key for your app/Http/Kernel.php file, which is called route middleware. $middlewareAliases, by default, holds entries for the middleware that are already incorporated in Laravel. For adding your custom middleware, you need to append them to the list and add a key of your choice.</li>
+        </ul>
+      </div>
+    </div>
+    <pre>&lt;?php
+protected $middlewareAliases = [
+  'auth' => \App\Http\Middleware\Authenticate::class,
+  'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+  'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+  'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+  'can' => \Illuminate\Auth\Middleware\Authorize::class,
+  'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+  'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+  'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+  'signed' => \App\Http\Middleware\ValidateSignature::class,
+  'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+  'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class
+];
+
+?>
+    </pre>
+    <h2>Middleware parameters</h2>
+    <pre>&lt;?php
+public function handle($request, Closure $next, $profile)
+   {
+       if (! $request->user()->hasProfile($profile)) {
+           // Next page
+       }
+       return $next($request);
+   }
+}
+
+?>
+    </pre>
+    <p>create middleware：</p>
+    <pre>php artisan make:middleware ProfileMiddleware</pre>
+    <p>file location : app/Http/Middleware/ProfileMiddleware.php</p>
+    <pre>&lt;?php
+namespace App\Http\Middleware;
+use Closure;
+
+class ProfileMiddleware {
+   public function handle($request, Closure $next, $Profile) {
+      echo "Role: ".$Profile;
+      return $next($request);
+   }
+}
+
+?>
+    </pre>
+    <h2>Terminable Middleware</h2>
+    <pre>&lt;?php
+namespace Illuminate\Session\Middleware;
+use Closure;
+class SessionBegin
+{
+    public function handle($request, Closure $next)
+    {
+        return $next($request);
+    }
+    public function terminate($request, $response)
+    {
+        // tasks assigned within terminate method
+    }
+}
+?>
+    </pre>
+  </body>
+</html>
