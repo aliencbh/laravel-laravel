@@ -95,18 +95,128 @@ class ProfileMiddleware {
     <h2>Terminable Middleware</h2>
     <pre>&lt;?php
 namespace Illuminate\Session\Middleware;
+
 use Closure;
-class SessionBegin
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class TerminatingMiddleware
 {
-    public function handle($request, Closure $next)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
     {
         return $next($request);
     }
-    public function terminate($request, $response)
+
+    /**
+     * Handle tasks after the response has been sent to the browser.
+     */
+    public function terminate(Request $request, Response $response): void
     {
-        // tasks assigned within terminate method
+        // ...
     }
 }
+
+?>
+    </pre>
+    <h2>Assigning Middleware To Routes</h2>
+    <h4>Example 1 single middleware</h4>
+    <pre>&lt;?php
+use App\Http\Middleware\Authenticate;
+
+Route::get('/profile', function () {
+    // ...
+})->middleware(Authenticate::class);
+
+?>
+    </pre>
+    <h4>Example 2 multiple middleware</h4>
+    <pre>&lt;?php
+Route::get('/', function () {
+    // ...
+})->middleware([First::class, Second::class]);
+
+?>
+    </pre>
+    <h2>Excluding Middleware</h2>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+use App\Http\Middleware\EnsureTokenIsValid;
+
+Route::middleware([EnsureTokenIsValid::class])->group(function () {
+    Route::get('/', function () {
+        // ...
+    });
+
+    Route::get('/profile', function () {
+        // ...
+    })->withoutMiddleware([EnsureTokenIsValid::class]);
+});
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <pre>&lt;?php
+use App\Http\Middleware\EnsureTokenIsValid;
+
+Route::withoutMiddleware([EnsureTokenIsValid::class])->group(function () {
+    Route::get('/profile', function () {
+        // ...
+    });
+});
+
+?>
+    </pre>
+    <h2>Middleware Groups</h2>
+    <pre>&lt;?php
+Route::get('/', function () {
+    // ...
+})->middleware('web');
+
+Route::middleware(['web'])->group(function () {
+    // ...
+});
+
+?>
+    </pre>
+    <h2>Middleware Parameters</h2>
+    <pre>&lt;?php
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureUserHasRole
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string $role): Response
+    {
+        if (! $request->user()->hasRole($role)) {
+            // Redirect...
+        }
+
+        return $next($request);
+    }
+
+}
+
+?>
+    </pre>
+    <p>Middleware parameters may be specified when defining the route by separating the middleware name and parameters with a :. Multiple parameters should be delimited by commas:</p>
+    <pre>&lt;?php
+Route::put('/post/{id}', function (string $id) {
+    // ...
+})->middleware('role:editor');
+
 ?>
     </pre>
   </body>

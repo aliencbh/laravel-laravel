@@ -15,7 +15,7 @@ edit config file
 mb string 计算小数点
 edit php.ini
 edit yaml
-set env file
+set env file to production
 set auto backup
 set load balancing
 

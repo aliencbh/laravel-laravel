@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Email</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <h2>Configuration</h2>
+    <p>File location : .env</p>
+    <p>Edit code inside</p>
+    <h2>Install</h2>
+    <pre>composer require symfony/mailgun-mailer symfony/http-client</pre>
+    <h2>Configure</h2>
+    <p>File location : config/mail.php</p>
+    <pre>'mailgun' => [
+  'transport' => 'mailgun',
+  'domain' => env('MAILGUN_DOMAIN'),
+  'secret' => env('MAILGUN_SECRET'),
+],
+    </pre>
+    <h2>Generate mailables</h2>
+    <p>File location : app/Mail</p>
+    <pre>php artisan make:mail sendmail</pre>
+    <h2>Configuring The Sender</h2>
+    <h3>Setup envelope</h3>
+    <p>File location : app\Mail\sendmail.php</p>
+    <pre>&lt;?php
+public function envelope(): Envelope {
+  return new Envelope(
+    from: new Address(
+      'aliencbh@163.com',
+      'Jeffrey Way'
+    ),
+    replyTo: [
+      new Address(
+        'aliencbh@163.com',
+        'Taylor Otwell'
+      ),
+    ],
+    subject: 'Order Shipped',
+  );
+}
+
+?>
+    </pre>
+    <h3>Setup content</h3>
+    <pre>&lt;?php
+public function content(): Content {
+  return new Content(
+    view: 'sendmail',
+    with: [
+      'orderName' => $this->order->name,
+      'orderPrice' => $this->order->price,
+    ],
+  );
+}
+
+?>
+    </pre>
+    <pre>&lt;?php
+public function __construct(protected sendmail $order) {
+    //
+  }
+
+?>
+    </pre>
+    <p>read in view file</p>
+    <pre>&lt;div>
+  Price: {{ $orderPrice }}
+&lt;/div>
+    </pre>
+    <h3>Setup attachments</h3>
+    <h4>Example 1 From path</h4>
+    <pre>&lt;?php
+public function attachments(): array {
+  return [
+        Attachment::fromPath('/path/to/file')
+        ->as('name.pdf')
+        ->withMime('application/pdf'),
+  ];
+}
+
+?>
+    </pre>
+    <h4>Example 2 From disk</h4>
+    <pre>&lt;?php
+public function attachments(): array {
+  return [
+        Attachment::fromStorage('/path/to/file')
+        ->as('name.pdf')
+        ->withMime('application/pdf'),
+  ];
+}
+
+?>
+    </pre>
+    <h4>Example 3 From raw data(pdf)</h4>
+    <pre>&lt;?php
+public function attachments(): array {
+  return [
+        Attachment::fromData(fn() => $this->pdf, 'Report.pdf')
+        ->withMime('application/pdf'),
+  ];
+}
+
+?>
+    </pre>
+    <h4>Example 4 From inline</h4>
+    <p>use blade file</p>
+    <pre>&lt;body>
+Here is an image:
+&lt;img src="{{ $message->embed($pathToImage) }}">
+&lt;/body>
+    </pre>
+    <h4>Example 5 From embedding raw data</h4>
+    <p>use blade file</p>
+    <pre>&lt;body>
+Here is an image from raw data:
+&lt;img src="{{ $message->embedData($data, 'example-image.jpg') }}">
+&lt;/body>
+    </pre>
+    <h4>Example 5 From embedding raw data</h4>
+    <p>models file</p>
+    <pre>&lt;?php
+namespace App\Models;
+
+use Illuminate\Contracts\Mail\Attachable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Mail\Attachment;
+
+class Photo extends Model implements Attachable
+{
+    /**
+     * Get the attachable representation of the model.
+     */
+    public function toMailAttachment(): Attachment {
+        return Attachment::fromPath('/path/to/file')
+        ->as('Photo Name')
+        ->withMime('image/jpeg');
+    }
+}
+
+?>
+    </pre>
+    <p>mail.php</p>
+    <pre>&lt;?php
+public function attachments(): array {
+  return [$this->photo];
+  // Create an attachment from a file on your default disk...
+  return Attachment::fromStorage($this->path);
+  // Create an attachment from a file on a specific disk...
+  return Attachment::fromStorageDisk('backblaze', $this->path);
+  //from memory
+  return Attachment::fromData(fn () => $this->content, 'Photo Name');
+  //from data
+  return Attachment::fromData(fn () => $this->content, 'Photo Name');
+
+}
+?>
+    </pre>
+    <h2>Headers</h2>
+    <p>Add code to app\mail\sendmail.php</p>
+    <pre>&lt;?php
+use Illuminate\Mail\Mailables\Headers;
+
+/**
+ * Get the message headers.
+ */
+public function headers(): Headers {
+  return new Headers(
+    messageId: 'custom-message-id@example.com',
+    references: ['previous-message@example.com'],
+    text: [
+      'X-Custom-Header' => 'Custom Value',
+    ],
+  );
+}
+?>
+    </pre>
+    <h2>Tag and metadata</h2>
+    <p>Add below envelope in app\mail\sendmail.php</p>
+    <pre>
+subject: 'Order Shipped',
+tags: ['shipment'],
+metadata: [
+'order_id' => $this->order->id,
+],
+    </pre>
+    <h2>Symfony Message</h2>
+    <p>Add below envelope in app\mail\sendmail.php</p>
+    <pre>
+use Illuminate\Mail\Mailables\Envelope;
+use Symfony\Component\Mime\Email;
+
+subject: 'Order Shipped',
+using: [
+    function (Email $message) {
+        // ...
+    },
+]
+    </pre>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+  </body>
+</html>

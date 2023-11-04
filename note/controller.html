@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+  <head>
+    <title>controller</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <h2>Single Action Controllers</h2>
+    <p>Controller file</p>
+    <pre>&lt;?php
+namespace App\Http\Controllers;
+
+class ProvisionServer extends Controller
+{
+  /**
+   * Provision a new web server.
+   */
+  public function __invoke()
+  {
+      // ...
+  }
+}
+
+?>
+    </pre>
+    <p>route file</p>
+    <pre>&lt;?php
+use App\Http\Controllers\ProvisionServer;
+
+Route::post('/server', ProvisionServer::class);
+
+?>
+    </pre>
+    <p>artisan</p>
+    <pre>php artisan make:controller ProvisionServer --invokable</pre>
+    <h2>Controller Middleware</h2>
+    <p>route file</p>
+    <pre>&lt;?php
+Route::get('profile', [UserController::class, 'show'])->middleware('auth');
+
+?>
+    </pre>
+    <p>controller file</p>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+class UserController extends Controller
+{
+  /**
+   * Instantiate a new controller instance.
+   */
+  public function __construct()
+  {
+      $this->middleware('auth');
+      $this->middleware('log')->only('index');
+      $this->middleware('subscribed')->except('store');
+  }
+}
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <pre>&lt;?php
+use Closure;
+use Illuminate\Http\Request;
+
+$this->middleware(function (Request $request, Closure $next) {
+    return $next($request);
+});
+
+?>
+    </pre>
+    <h2>Resource Controllers</h2>
+    <p>artisan</p>
+    <pre>php artisan make:controller PhotoController --resource</pre>
+    <p>route file</p>
+    <p>Example 1</p>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoController;
+
+Route::resource('photos', PhotoController::class);
+
+?>
+    </pre>
+    <p>Example 2</p>
+    <pre>&lt;?php
+Route::resources([
+    'photos' => PhotoController::class,
+    'posts' => PostController::class,
+]);
+
+?>
+    </pre>
+    <h2>Customizing Missing Model Behavior</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+
+Route::resource('photos', PhotoController::class)
+->missing(function (Request $request) {
+    return Redirect::route('photos.index');
+});
+
+?>
+    </pre>
+    <h2>Specifying The Resource Model</h2>
+    <pre>php artisan make:controller PhotoController --model=Photo --resource</pre>
+    <h2>Generating Form Requests</h2>
+    <pre>php artisan make:controller PhotoController --model=Photo --resource --requests</pre>
+    <h2>Partial Resource Routes</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoController;
+
+Route::resource('photos', PhotoController::class)->only([
+    'index', 'show'
+]);
+
+Route::resource('photos', PhotoController::class)->except([
+    'create', 'store', 'update', 'destroy'
+]);
+
+?>
+    </pre>
+    <h2>API Resource Routes</h2>
+    <p>Example 1</p>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoController;
+
+Route::apiResource('photos', PhotoController::class);
+
+?>
+    </pre>
+    <p>Example 2</p>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\PostController;
+
+Route::apiResources([
+    'photos' => PhotoController::class,
+    'posts' => PostController::class,
+]);
+
+?>
+    </pre>
+    <p>artisan</p>
+    <pre>php artisan make:controller PhotoController --api</pre>
+    <h2>Nested Resources</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoCommentController;
+///photos/{photo}/comments/{comment}
+Route::resource('photos.comments', PhotoCommentController::class);
+
+?>
+    </pre>
+    <h2>Shallow Nesting</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\CommentController;
+
+Route::resource('photos.comments', CommentController::class)->shallow();
+
+?>
+    </pre>
+    <h2>Naming Resource Routes</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoController;
+
+Route::resource('photos', PhotoController::class)->names([
+    'create' => 'photos.build'
+]);
+
+?>
+    </pre>
+    <h2>Naming Resource Route Parameters</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\AdminUserController;
+///users/{admin_user}
+Route::resource('users', AdminUserController::class)->parameters([
+    'users' => 'admin_user'
+]);
+
+?>
+    </pre>
+    <h2>Scoping Resource Routes</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\PhotoCommentController;
+///photos/{photo}/comments/{comment:slug}
+Route::resource('photos.comments', PhotoCommentController::class)->scoped([
+    'comment' => 'slug',
+]);
+
+?>
+    </pre>
+    <h2>Localizing Resource URIs</h2>
+    <p>File location : App\Providers\RouteServiceProvider</p>
+    <pre>&lt;?php
+/**
+ * Define your route model bindings, pattern filters, etc.
+ */
+public function boot(): void
+{
+    Route::resourceVerbs([
+        'create' => 'crear',
+        'edit' => 'editar',
+    ]);
+
+    // ...
+}
+
+?>
+    </pre>
+    <h2>Supplementing Resource Controllers</h2>
+    <pre>&lt;?php
+use App\Http\Controller\PhotoController;
+
+Route::get('/photos/popular', [PhotoController::class, 'popular']);
+Route::resource('photos', PhotoController::class);
+
+?>
+    </pre>
+    <h2>Singleton Resource Controllers</h2>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+
+Route::singleton('profile', ProfileController::class);
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <pre>&lt;?php
+Route::singleton('photos.thumbnail', ThumbnailController::class);
+
+?>
+    </pre>
+    <h2>Creatable Singleton Resources</h2>
+    <pre>&lt;?php
+Route::singleton('photos.thumbnail', ThumbnailController::class)->creatable();
+
+?>
+    </pre>
+    <p>If you would like Laravel to register the DELETE route for a singleton resource but not register the creation or storage routes, you may utilize the destroyable method:</p>
+    <pre>&lt;?php
+Route::singleton(...)->destroyable();
+
+?>
+    </pre>
+    <h2>API Singleton Resources</h2>
+    <p>normal</p>
+    <pre>&lt;?php Route::apiSingleton('profile', ProfileController::class); ?></pre>
+    <p>creatable</p>
+    <pre>&lt;?php Route::apiSingleton('photos.thumbnail', ProfileController::class)->creatable(); ?></pre>
+    <h2>Constructor Injection</h2>
+    <pre>&lt;?php
+namespace App\Http\Controllers;
+
+use App\Repositories\UserRepository;
+
+class UserController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        protected UserRepository $users,
+    ) {}
+}
+
+?>
+    </pre>
+    <h2>Method Injection</h2>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Store a new user.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $name = $request->name;
+
+        // Store the user...
+
+        return redirect('/users');
+    }
+}
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <p>route file</p>
+    <pre>&lt;?php
+use App\Http\Controllers\UserController;
+
+Route::put('/user/{id}', [UserController::class, 'update']);
+
+?>
+    </pre>
+    <p>controller file</p>
+    <pre>&lt;?php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Update the given user.
+     */
+    public function update(Request $request, string $id): RedirectResponse
+    {
+        // Update the user...
+
+        return redirect('/users');
+    }
+}
+
+?>
+    </pre>
+    <h2></h2>
+    <pre>&lt;?php
+
+
+?>
+    </pre>
+    <h2></h2>
+    <pre>&lt;?php
+
+
+?>
+    </pre>
+  </body>
+</html>

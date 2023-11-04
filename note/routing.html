@@ -1,0 +1,477 @@
+<!doctype html>
+<html>
+  <head>
+    <title>routing</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  </head>
+  <body>
+    <h2>Default routing</h2>
+    <pre>&lt;?php
+use Illuminate\Support\Facades\Route;
+
+Route::get('/greeting', function () {
+  return 'Hello World';
+});
+
+?>
+    </pre>
+    <h2>Route to page</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\UserController;
+
+Route::get('/user', [UserController::class, 'index']);
+
+?>
+    </pre>
+    <h2>Route dependency injection</h2>
+    <pre>&lt;?php
+use Illuminate\Http\Request;
+
+Route::get('/users', function (Request $request) {
+    // ...
+});
+
+?>
+    </pre>
+    <h2>Available router method</h2>
+    <pre>&lt;?php
+Route::get($uri, $callback);
+Route::post($uri, $callback);
+Route::put($uri, $callback);
+Route::patch($uri, $callback);
+Route::delete($uri, $callback);
+Route::options($uri, $callback);
+Route::match(['get', 'post'], '/', function () {
+    // ...
+});
+
+Route::any('/', function () {
+    // ...
+});
+
+?>
+    </pre>
+    <h2>csrf</h2>
+    <pre>&lt;form method="POST" action="/profile">
+  @csrf
+  ...
+&lt;/form>
+    </pre>
+    <h2>Redirect route</h2>
+    <h4>Example 1</h4>
+    <pre>Route::redirect('/here', '/there');</pre>
+    <h4>Example 2</h4>
+    <pre>Route::redirect('/here', '/there', 301);</pre>
+    <h4>Example 3</h4>
+    <pre>Route::permanentRedirect('/here', '/there');</pre>
+    <h2>View routes</h2>
+    <h4>Example 1</h4>
+    <pre>Route::view('/welcome', 'welcome');</pre>
+    <h4>Example 2</h4>
+    <pre>Route::view('/welcome', 'welcome', ['name' => 'Taylor']);</pre>
+    <h2>Required parameters</h2>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+Route::get('/user/{id}', function (string $id) {
+    return 'User '.$id;
+});
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <pre>&lt;?php
+Route::get('/posts/{post}/comments/{comment}', function (string $postId, string $commentId) {
+  // ...
+});
+
+?>
+    </pre>
+    <h2>Parameters and dependency injection</h2>
+    <pre>&lt;?php
+use Illuminate\Http\Request;
+
+Route::get('/user/{id}', function (Request $request, string $id) {
+  return 'User '.$id;
+});
+
+?>
+    </pre>
+    <h2>Optional parameters</h2>
+    <pre>&lt;?php
+Route::get('/user/{name?}', function (?string $name = null) {
+  return $name;
+});
+
+Route::get('/user/{name?}', function (?string $name = 'John') {
+  return $name;
+});
+
+?>
+    </pre>
+    <h2>Regular expression constraints</h2>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+Route::get('/user/{name}', function (string $name) {
+// ...
+})->where('name', '[A-Za-z]+');
+
+Route::get('/user/{id}', function (string $id) {
+// ...
+})->where('id', '[0-9]+');
+
+Route::get('/user/{id}/{name}', function (string $id, string $name) {
+// ...
+})->where(['id' => '[0-9]+', 'name' => '[a-z]+']);
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <pre>&lt;?php
+Route::get('/user/{id}/{name}', function (string $id, string $name) {
+// ...
+})->whereNumber('id')->whereAlpha('name');
+
+Route::get('/user/{name}', function (string $name) {
+// ...
+})->whereAlphaNumeric('name');
+
+Route::get('/user/{id}', function (string $id) {
+// ...
+})->whereUuid('id');
+
+Route::get('/user/{id}', function (string $id) {
+//
+})->whereUlid('id');
+
+Route::get('/category/{category}', function (string $category) {
+// ...
+})->whereIn('category', ['movie', 'song', 'painting']);
+
+?>
+    </pre>
+    <h2>Global Constraints</h2>
+    <p>File location : App\Providers\RouteServiceProvider</p>
+    <pre>&lt;?php
+/**
+ * Define your route model bindings, pattern filters, etc.
+ */
+public function boot(): void {
+  Route::pattern('id', '[0-9]+');
+}
+
+?>
+    </pre>
+    <p>route file</p>
+    <pre>&lt;?php
+Route::get('/user/{id}', function (string $id) {
+    // Only executed if {id} is numeric...
+});
+
+?>
+    </pre>
+    <h2>Encoded Forward Slashes</h2>
+    <p>The Laravel routing component allows all characters except / to be present within route parameter values. You must explicitly allow / to be part of your placeholder using a where condition regular expression:</p>
+    <pre>&lt;?php
+Route::get('/search/{search}', function (string $search) {
+  return $search;
+})->where('search', '.*');
+
+?>
+    </pre>
+    <h2>Named Routes</h2>
+    <h4>Example 1 route names</h4>
+    <pre>&lt;?php
+Route::get('/user/profile', function () {
+    // ...
+})->name('profile');
+
+?>
+    </pre>
+    <h4>Example 2 route names for controller actions</h4>
+    <pre>&lt;?php
+Route::get(
+  '/user/profile',
+  [UserProfileController::class, 'show']
+)->name('profile');
+
+?>
+    </pre>
+    <h4>Example 3 Parameters in Named routes</h4>
+    <pre>&lt;?php
+Route::get('user/{id}/profile',function($id) {
+  $url=route('profile',['id'=>100]);
+  return $url;
+})->name('profile');
+
+?>
+    </pre>
+    <h2>Generating URLs To Named Routes</h2>
+    <pre>&lt;?php
+// Generating URLs...
+$url = route('profile');
+
+// Generating Redirects...
+return redirect()->route('profile');
+
+return to_route('profile');
+
+?>
+    </pre>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+Route::get('/user/{id}/profile', function (string $id) {
+    // ...
+})->name('profile');
+
+$url = route('profile', ['id' => 1]);
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <pre>&lt;?php
+Route::get('/user/{id}/profile', function (string $id) {
+    // ...
+})->name('profile');
+
+$url = route('profile', ['id' => 1, 'photos' => 'yes']);
+
+// /user/1/profile?photos=yes
+
+?>
+    </pre>
+    <h2>Inspecting The Current Route</h2>
+    <pre>&lt;?php
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Handle an incoming request.
+ *
+ * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+ */
+public function handle(Request $request, Closure $next): Response {
+  if ($request->route()->named('profile')) {
+    // ...
+  }
+
+  return $next($request);
+}
+
+?>
+    </pre>
+    <h2>Middleware</h2>
+    <pre>&lt;?php
+Route::middleware(['first', 'second'])->group(function () {
+  Route::get('/', function () {
+    // Uses first & second middleware...
+  });
+
+  Route::get('/user/profile', function () {
+    // Uses first & second middleware...
+  });
+});
+
+?>
+    </pre>
+    <h2>Controllers</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\OrderController;
+
+Route::controller(OrderController::class)->group(function () {
+    Route::get('/orders/{id}', 'show');
+    Route::post('/orders', 'store');
+});
+
+?>
+    </pre>
+    <h2>Subdomain Routing</h2>
+    <pre>&lt;?php
+Route::domain('{account}.example.com')->group(function () {
+  Route::get('user/{id}', function (string $account, string $id) {
+    // ...
+  });
+});
+
+?>
+    </pre>
+    <h2>Route Prefixes</h2>
+    <pre>&lt;?php
+Route::prefix('admin')->group(function () {
+  Route::get('/users', function () {
+    // Matches The "/admin/users" URL
+  });
+});
+
+?>
+    </pre>
+    <h2>Route Name Prefixes</h2>
+    <pre>&lt;?php
+Route::name('admin.')->group(function () {
+  Route::get('/users', function () {
+    // Route assigned name "admin.users"...
+  })->name('users');
+});
+
+?>
+    </pre>
+    <h2>Implicit Binding</h2>
+    <h4>Example 1</h4>
+    <pre>&lt;?php
+use App\Models\User;
+
+Route::get('/users/{user}', function (User $user) {
+  return $user->email;
+});
+
+?>
+    </pre>
+    <h4>Example 2</h4>
+    <pre>&lt;?php
+use App\Http\Controllers\UserController;
+use App\Models\User;
+
+// Route definition...
+Route::get('/users/{user}', [UserController::class, 'show']);
+
+// Controller method definition...
+public function show(User $user)
+{
+    return view('user.profile', ['user' => $user]);
+}
+
+?>
+    </pre>
+    <h2>Customizing The Key</h2>
+    <pre>&lt;?php
+use App\Models\Post;
+
+Route::get('/posts/{post:slug}', function (Post $post) {
+  return $post;
+});
+
+?>
+    </pre>
+    <pre>&lt;?php
+/**
+ * Get the route key for the model.
+ */
+public function getRouteKeyName(): string
+{
+  return 'slug';
+}
+
+?>
+    </pre>
+    <h2>Custom Keys & Scoping</h2>
+    <pre>&lt;?php
+use App\Models\Post;
+use App\Models\User;
+
+Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {
+  return $post;
+});
+
+?>
+    </pre>
+    <pre>&lt;?php
+use App\Models\Post;
+use App\Models\User;
+
+Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
+  return $post;
+})->scopeBindings();
+
+?>
+    </pre>
+    <pre>&lt;?php
+Route::scopeBindings()->group(function () {
+  Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
+    return $post;
+  });
+});
+
+?>
+    </pre>
+    <pre>&lt;?php
+Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {
+  return $post;
+})->withoutScopedBindings();
+
+?>
+    </pre>
+    <h2>Customizing Missing Model Behavior</h2>
+    <pre>&lt;?php
+use App\Http\Controllers\LocationsController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+
+Route::get('/locations/{location:slug}', [LocationsController::class, 'show'])
+->name('locations.view')
+->missing(function (Request $request) {
+  return Redirect::route('locations.index');
+});
+
+?>
+    </pre>
+    <h2>Implicit Enum Binding</h2>
+    <pre>&lt;?php
+namespace App\Enums;
+
+enum Category: string {
+    case Fruits = 'fruits';
+    case People = 'people';
+}
+
+?>
+    </pre>
+    <pre>&lt;?php
+use App\Enums\Category;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/categories/{category}', function (Category $category) {
+    return $category->value;
+});
+
+?>
+    </pre>
+    <h2>Explicit Binding</h2>
+    <pre>&lt;?php
+use App\Models\User;
+use Illuminate\Support\Facades\Route;
+
+/**
+ * Define your route model bindings, pattern filters, etc.
+ */
+public function boot(): void {
+  Route::model('user', User::class);
+  // ...
+}
+
+?>
+    </pre>
+    <pre>&lt;?php
+use App\Models\User;
+
+Route::get('/users/{user}', function (User $user) {
+    // ...
+});
+
+?>
+    </pre>
+    <h2></h2>
+    <pre>&lt;?php
+
+
+?>
+    </pre>
+    <h2></h2>
+    <pre>&lt;?php
+
+
+?>
+    </pre>
+  </body>
+</html>
