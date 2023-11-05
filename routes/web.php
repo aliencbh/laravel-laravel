@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Test2Controller;
 use App\Http\Controllers\Test23Controller;
+use App\Http\Controllers\Test29Controller;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request as Request3;
 use Illuminate\Http\Request as Request11;
@@ -128,6 +129,23 @@ Route::get('/test25/id', function () {
   }
 })->name('name is route 25');
 //Named Routes in middleware
-Route::get('/test26')->middleware(['test26', 'signed'])->name('name is route 26');
+Route::get('/test26')->middleware(['middle26', 'signed'])->name('name is route 26');
+//Route Groups in kernel file
+Route::get('/test27')->middleware('middle27');
+//Route Groups with middleware method
+Route::middleware(['middle28_1', 'middle28_2'])->group(function () {
+  Route::get('/test28_1', function () {
+    // Uses first & second middleware...
+  })->name('name is route 28_1');
+
+  Route::get('/test28_2', function () {
+    // Uses first & second middleware...
+  })->name('name is route 28_2');
+});
+//Route with same controller
+Route::controller(Test29Controller::class)->group(function () {
+  Route::get('/test29/{id}', 'show');
+  Route::post('/test29', 'store')->middleware(['middle29'])->withoutMiddleware(['web']);
+});
 
 require __DIR__ . '/auth.php';

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class test26 {
+class middle26 {
 
   /**
    * Handle an incoming request.

@@ -42,6 +42,11 @@ class Kernel extends HttpKernel {
           \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
           \Illuminate\Routing\Middleware\SubstituteBindings::class,
       ],
+      'middle27' => [
+          \App\Http\Middleware\middle27_1::class,
+          \App\Http\Middleware\middle27_2::class,
+          \App\Http\Middleware\middle27_3::class
+      ],
   ];
 
   /**
@@ -63,6 +68,9 @@ class Kernel extends HttpKernel {
       'signed' => \App\Http\Middleware\ValidateSignature::class,
       'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
       'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-      'test26' => \App\Http\Middleware\test26::class,
+      'middle26' => \App\Http\Middleware\middle26::class,
+      'middle28_1' => \App\Http\Middleware\middle28_1::class,
+      'middle28_2' => \App\Http\Middleware\middle28_2::class,
+      'middle29' => \App\Http\Middleware\middle29::class
   ];
 }
