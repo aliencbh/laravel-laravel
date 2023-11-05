@@ -75,20 +75,10 @@ $this->middleware(function (Request $request, Closure $next) {
     <p>artisan</p>
     <pre>php artisan make:controller PhotoController --resource</pre>
     <p>route file</p>
-    <p>Example 1</p>
     <pre>&lt;?php
 use App\Http\Controllers\PhotoController;
 
 Route::resource('photos', PhotoController::class);
-
-?>
-    </pre>
-    <p>Example 2</p>
-    <pre>&lt;?php
-Route::resources([
-    'photos' => PhotoController::class,
-    'posts' => PostController::class,
-]);
 
 ?>
     </pre>

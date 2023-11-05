@@ -110,6 +110,15 @@ Route::get('/user/{name?}', function (?string $name = 'John') {
 
 ?>
     </pre>
+    <h2>Multiple page route</h2>
+    <pre>&lt;?php
+Route::resources([
+    'photos' => PhotoController::class,
+    'posts' => PostController::class,
+]);
+
+?>
+    </pre>
     <h2>Regular expression constraints</h2>
     <h4>Example 1</h4>
     <pre>&lt;?php
