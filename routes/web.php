@@ -1,12 +1,43 @@
 <?php
 
+use App\Models\User;
+use App\Models\Migration;
+use App\Models\Test36;
+use App\Models\Test37;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\Test2Controller;
 use App\Http\Controllers\Test23Controller;
 use App\Http\Controllers\Test29Controller;
+use App\Http\Controllers\Test34Controller;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request as Request3;
 use Illuminate\Http\Request as Request11;
 
+/*
+  |--------------------------------------------------------------------------
+  | Web Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register web routes for your application. These
+  | routes are loaded by the RouteServiceProvider and all of them will
+  | be assigned to the "web" middleware group. Make something great!
+  |
+ */
+
+Route::get('/', function () {
+  return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+  return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+  Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+  Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 /*
   |--------------------------------------------------------------------------
   | available routing method
@@ -27,7 +58,7 @@ use Illuminate\Http\Request as Request11;
   | });
   |
  */
-
+Route::get('/sales/create', [SalesController::class, 'create']);
 //Basic Routing
 Route::get('/test1', function () {
   return 'Hello World';
@@ -147,5 +178,59 @@ Route::controller(Test29Controller::class)->group(function () {
   Route::get('/test29/{id}', 'show');
   Route::post('/test29', 'store')->middleware(['middle29'])->withoutMiddleware(['web']);
 });
+//subdomain route
+Route::get('/', function () {
+  return 'First sub domain' . ' blog.' . env('APP_URL');
+})->domain('blog.' . env('APP_URL'));
+Route::domain('blog.' . env('APP_URL'))->group(function () {
+  Route::get('test30', function () {
+    return 'Second subdomain landing page';
+  });
+  Route::get('test30/{id}', function ($id) {
+    return 'Test30 ' . $id . ' in second subdomain';
+  });
+});
+//Route Prefixes
+Route::prefix('admin')->group(function () {
+  Route::get('/test31', function () {
+    //http://localhost:8000/admin/test31
+    return 'Test31 url = ' . url()->full();
+  });
+});
+//Route Name Prefixes
+Route::name('admin.')->group(function () {
+  Route::get('/test32', function () {
+    //http://localhost:8000/test32
+    // Route assigned name "admin.users"...
+    return 'Test32 url = ' . url()->full() . ', route name ' . route('admin.users');
+  })->name('users');
+});
+
+//Implicit Binding with route
+Route::get('/test33/{user}', function (User $user) {
+  return 'Test33 email = ' . $user->email;
+});
+//Implicit Binding with controller
+Route::post('/test34/{id}', [Test34Controller::class, 'show'])->withoutMiddleware(['web']);
+//Customizing The Key(search column)
+Route::get('/test35/{user:name}', function (User $user) {
+  //http://localhost:8000/test35/hooi
+  return 'Test35 user = ' . $user;
+});
+//Customizing The Key(search column) by model
+Route::get('/test36/{user}', function (Test36 $user) {
+  //http://localhost:8000/test36/hooi@gmail.com
+  return 'Test36 user = ' . $user;
+});
+//Customizing The Key(search column) with multiple parameter
+Route::get('/test37/{user}/test37_1/{migration}', function (Test36 $user, Test37 $migration) {
+  //http://localhost:8000/test37/hooi@gmail.com/test37_1/2019_08_19_000000_create_failed_jobs_table
+  return 'Test37 user = ' . $user . ', migration = ' . $migration;
+});
+//Customizing The Key(search column) with multiple parameter
+Route::get('/test38/{user}/test38_1/{migration}', function (User $user, Migration $migration) {
+  //http://localhost:8000/test38/1/test38_1/2019_08_19_000000_create_failed_jobs_table
+  return 'Test38 user = ' . $user . ', migration = ' . $migration;
+})->scopeBindings();
 
 require __DIR__ . '/auth.php';

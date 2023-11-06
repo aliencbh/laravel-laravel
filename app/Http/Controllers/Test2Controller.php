@@ -10,6 +10,6 @@ class Test2Controller extends Controller {
    * Display a listing of the resource.
    */
   public function index() {
-    dd('test2 index');
+    return 'test2 index';
   }
 }
